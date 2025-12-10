@@ -173,7 +173,8 @@ npm install
 
 3. Start the development server:
 ```powershell
-npm start
+npm start 
+
 ```
 
 Application will open at `http://localhost:3000`
