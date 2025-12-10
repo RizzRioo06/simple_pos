@@ -14,6 +14,7 @@ const Checkout = () => {
 
   useEffect(() => {
     loadCheckoutInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
   const loadCheckoutInfo = async () => {

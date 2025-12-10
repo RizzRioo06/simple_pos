@@ -35,6 +35,7 @@ const createTables = async () => {
         id SERIAL PRIMARY KEY,
         table_number INTEGER UNIQUE NOT NULL,
         status VARCHAR(20) DEFAULT 'FREE',
+        qr_code TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -44,8 +45,11 @@ const createTables = async () => {
       CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
         table_id INTEGER REFERENCES tables(id),
-        status VARCHAR(20) DEFAULT 'OPEN',
+        status VARCHAR(20) DEFAULT 'PENDING',
         total_amount DECIMAL(10,2) DEFAULT 0,
+        payment_method VARCHAR(20),
+        payment_slip TEXT,
+        payment_verified BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         completed_at TIMESTAMP
       )
@@ -60,8 +64,11 @@ const createTables = async () => {
         quantity INTEGER NOT NULL DEFAULT 1,
         price DECIMAL(10,2) NOT NULL,
         status VARCHAR(20) DEFAULT 'PENDING',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        served_at TIMESTAMP
+        received_at TIMESTAMP,
+        cooking_started_at TIMESTAMP,
+        cooked_at TIMESTAMP,
+        served_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 

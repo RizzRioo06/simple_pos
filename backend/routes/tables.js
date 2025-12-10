@@ -10,10 +10,11 @@ router.get('/', async (req, res) => {
         t.id,
         t.table_number,
         t.status,
+        t.qr_code,
         COALESCE(o.total_amount, 0) as current_bill,
         o.id as order_id
       FROM tables t
-      LEFT JOIN orders o ON t.id = o.table_id AND o.status = 'OPEN'
+      LEFT JOIN orders o ON t.id = o.table_id AND o.status NOT IN ('PAID', 'COMPLETED')
       ORDER BY t.table_number
     `);
     res.json(result.rows);
@@ -32,10 +33,11 @@ router.get('/:id', async (req, res) => {
         t.id,
         t.table_number,
         t.status,
+        t.qr_code,
         COALESCE(o.total_amount, 0) as current_bill,
         o.id as order_id
       FROM tables t
-      LEFT JOIN orders o ON t.id = o.table_id AND o.status = 'OPEN'
+      LEFT JOIN orders o ON t.id = o.table_id AND o.status NOT IN ('PAID', 'COMPLETED')
       WHERE t.id = $1
     `, [id]);
     
@@ -46,6 +48,31 @@ router.get('/:id', async (req, res) => {
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Error fetching table:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Generate QR code for table (simplified - just returns URL)
+router.post('/:id/generate-qr', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const baseUrl = req.body.baseUrl || 'http://localhost:3000';
+    
+    // Create QR data (URL to customer interface)
+    const qrData = `${baseUrl}/customer/${id}`;
+    
+    const result = await pool.query(
+      'UPDATE tables SET qr_code = $1 WHERE id = $2 RETURNING *',
+      [qrData, id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Table not found' });
+    }
+    
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error generating QR code:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
