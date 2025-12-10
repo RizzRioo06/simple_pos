@@ -8,7 +8,7 @@
     "dev": "nodemon server.js",
     "seed": "node seed.js",
     "railway:seed": "node seed.js",
-    "migrate": "node add-qr-code-column.js"
+    "migrate": "node migrate-add-columns.js"
   },
   "keywords": ["pos", "teashop", "burmese"],
   "author": "",
