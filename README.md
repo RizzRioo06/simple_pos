@@ -169,6 +169,7 @@ cd "d:\POS SImple Project\frontend"
 2. Install dependencies:
 ```powershell
 npm install
+Testing
 ```
 
 3. Start the development server:
