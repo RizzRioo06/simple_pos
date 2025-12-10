@@ -1,0 +1,13 @@
+{
+  "name": "burmese-teashop-pos",
+  "version": "1.0.0",
+  "description": "Burmese Tea Shop POS System",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && npm install && npm start",
+    "seed": "cd backend && npm run seed"
+  },
+  "keywords": ["pos", "teashop"],
+  "author": "",
+  "license": "MIT"
+}
